@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+    <head>
+
+    <!-- some basic stuff  -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SVG with D3</title>
+
+    <!-- 
+      add your stylesheet 
+      base.css loads the basic stuff
+      you can tweak your css in custom.css
+      WARNING: the order of the stylesheets matters
+    -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="custom.css">
+
+    
+
+
+ 
+    <!-- add your d3 script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    
+    <!-- your JS code that uses d3 to manipulate data -->
+    <script>
+
+     // Step 4. load your data with d3.csv()
+     d3.csv("2021election_HR.csv")
+        
+        .then(data => {
+
+         // check if the data is loaded:
+         console.log(data)
+
+         // == your code happens below ==
+         
+         // Step 5. create an SVG container inside #my-svg-chart using d3.select().append()
+         const myChart = d3
+           .select('#my-svg-chart')
+           .append('svg')
+           .attr('width', 640)
+           .attr('height', 420)
+
+         // Step 6. create SVG elements binded with data
+         const members = myChart
+           .selectAll('rect')
+           .data(data)
+           .join('rect');
+
+
+         // Step 7. Position the SVG shapes at the right places
+         const gridSize = 20, gap = 2;
+
+         members
+           // SVG rectangle specific attributes
+           .attr('x', (d,i) => {
+             return Math.floor(i%25)*(gridSize+ gap);
+           })
+           .attr('y', (d,i) => {
+             return Math.floor(i/25)*(gridSize+ gap);
+           })
+           .attr('width', gridSize)
+           .attr('height', gridSize)
+
+         // Step 8. Encode data onto the SVG shapes
+         members.style('fill', d=> {
+           if (d.age_at_election < 30) {return '#ff4500'}
+           else if (d.age_at_election < 40) {return '#ff8c00'}
+           else if (d.age_at_election < 50) {return '#4689FF'}
+           else if (d.age_at_election < 60) {return '#75A9FF'}
+           else if (d.age_at_election < 70) {return '#A4C6FF'}
+           else if (d.age_at_election >= 70) {return '#BAD3FF'}
+
+         })
+
+         
+    
+
+        //legendA
+         var svg = d3.select("#my_legend")
+
+         svg.append("rect")
+            .attr("x", 10 - 6) // Adjust the x-coordinate to center the square
+            .attr("y", 30 - 6) // Adjust the y-coordinate to center the square
+            .attr("width", 12) // Specify the width of the square
+            .attr("height", 12) // Specify the height of the square
+            .style("fill", "#ff4500");
+         svg.append("rect").attr("x", 90 - 6).attr("y", 30 - 6).attr("width", 12).attr("height", 12).style("fill", "#ff8c00");
+         svg.append("rect").attr("x", 170 - 6).attr("y", 30 - 6).attr("width", 12).attr("height", 12).style("fill", "#4689FF");
+         svg.append("rect").attr("x", 250 - 6).attr("y", 30 - 6).attr("width", 12).attr("height", 12).style("fill", "#75A9FF");
+         svg.append("rect").attr("x", 330 - 6).attr("y", 30 - 6).attr("width", 12).attr("height", 12).style("fill", "#A4C6FF");
+         svg.append("rect").attr("x", 410 - 6).attr("y", 30 - 6).attr("width", 12).attr("height", 12).style("fill", "#BAD3FF");
+             
+         svg.append("text").attr("x", 30).attr("y", 30).text("< 30").style("font-size", "15px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 110).attr("y", 30).text("30-39").style("font-size", "15px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 190).attr("y", 30).text("40-49").style("font-size", "15px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 270).attr("y", 30).text("60-59").style("font-size", "15px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 350).attr("y", 30).text("60-69").style("font-size", "15px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 430).attr("y", 30).text(">= 70").style("font-size", "15px").attr("alignment-baseline","middle")
+
+        //legendB
+
+         const legendData = [
+            { category: '< 30', color: '#ff4500' },
+            { category: '30-39', color: '#ff8c00' },
+            { category: '40-49', color: '#4689FF' },
+            { category: '50-59', color: '#75A9FF' },
+            { category: '60-69', color: '#A4C6FF' },
+            { category: '>= 70', color: '#BAD3FF' },
+            ];
+
+         const legendContainer = d3.select('#legend')
+            .append('div')
+            .attr('class', 'legend-container');
+
+         const legend = legendContainer
+            .selectAll('.legend-item')
+            .data(legendData)
+            .enter()
+            .append('div')
+            .attr('class', 'legend-item');
+
+         legend
+            .append('span')
+            .attr('class', 'legend-color')
+            .style('background-color', d => d.color);
+
+         legend
+            .append('span')
+            .attr('class', 'legend-label')
+            .text(d => d.category);
+        
+        //
+
+         // legend circle
+         var svg = d3.select("#my_dataviz")
+
+        // 
+         svg.append("circle").attr("cx",100).attr("cy",30).attr("r", 6).style("fill", "#69b3a2")
+         svg.append("circle").attr("cx",200).attr("cy",30).attr("r", 6).style("fill", "#404080")
+         svg.append("text").attr("x", 120).attr("y", 30).text("variable A").style("font-size", "15px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 220).attr("y", 30).text("variable B").style("font-size", "15px").attr("alignment-baseline","middle")
+
+    
+
+
+
+        })
+
+    </script>
+
+
+
+
+    </head>
+
+
+  <style>
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      
+    .legend-color {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+      }
+      
+    .legend-label {
+        font-size: 14px;
+      }
+    </style>
+
+
+  <body>
+    <h1>23 of 465</h1>
+    <p>Less than 5% of the members of Japan's House of Representatives are younger than 40.</p>
+    <div>
+        <svg id="my_legend" height=50 width=500></svg>
+    </div>
+    <div id="my-svg-chart"></div>
+    <!-- <div id="legend"></div> -->
+
+    <!-- <div>
+        <svg id="my_dataviz" height=300 width=450></svg>
+    </div>
+
+    <div id="my-svg-chart"></div> -->
+  </body>
+</html>
