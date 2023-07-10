@@ -44,10 +44,14 @@
            .attr('height', 420)
 
          // Step 6. create SVG elements binded with data
+         // const days = d3 
+         // .select('#my-svg-chart svg') 
          const members = myChart
+        
            .selectAll('rect')
            .data(data)
            .join('rect');
+        // .join('rect') = .enter().append('rect')
 
 
          // Step 7. Position the SVG shapes at the right places
